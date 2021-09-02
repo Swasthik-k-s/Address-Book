@@ -13,7 +13,7 @@ public class AddressBookMain {
 		
 		while(true) {
 			
-			System.out.println("1)Add a Contact\n2)Edit a Contact\n3)View Contacts\n4)Exit");
+			System.out.println("1)Add a Contact\n2)Delete Contact\n3)Edit a Contact\n4)View Contacts\n5)Exit");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 			
@@ -22,9 +22,12 @@ public class AddressBookMain {
 				addContact();
 				break;
 			case 2:
-				editContact();
+				deleteContact();
 				break;
 			case 3:
+				editContact();
+				break;
+			case 4:
 				showAddressBook();
 				break;
 			default:
@@ -65,13 +68,21 @@ public class AddressBookMain {
 		}
 	}
 	
+	public static void deleteContact() {
+		Contact deleteContact = getContact();
+		
+		if(deleteContact == null) {
+			System.out.println("Name does not exist in the Address Book");
+		} else {
+			addressBook.remove(deleteContact);
+			System.out.println("Contact Deleted Successfully");
+		}
+	}
+	
 	public static void editContact() {
+		
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Enter the First Name");
-		String firstName = scanner.next();
-		System.out.println("Enter the Last Name");
-		String lastName = scanner.next();
-		Contact editContact = getContact(firstName,lastName);
+		Contact editContact = getContact();
 		
 		if(editContact == null) {
 			System.out.println("Name does not exist in the Address Book");
@@ -130,7 +141,12 @@ public class AddressBookMain {
 		}
 	}
 	
-	public static Contact getContact(String fname,String lname) {
+	public static Contact getContact() {
+		System.out.println("Enter the First Name");
+		String fname = scanner.next();
+		System.out.println("Enter the Last Name");
+		String lname = scanner.next();
+		
 		for(Contact contact:addressBook) {
 			if(contact.firstName.equals(fname) && contact.lastName.equals(lname)) {
 				return contact;
