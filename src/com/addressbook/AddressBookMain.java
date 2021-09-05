@@ -31,6 +31,7 @@ public class AddressBookMain {
 				showAddressBook();
 				break;
 			default:
+				System.out.println("Thank You");
 				return;
 			}
 			
