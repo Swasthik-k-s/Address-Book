@@ -4,13 +4,11 @@ import java.util.*;
 
 public class AddressBookMain {
 
-	public static List<AddressBook> addressBook = new ArrayList<>();
+	public static Map<String, List<Contact>> map = new HashMap<>();
 
 	static Scanner scanner = new  Scanner(System.in);
 
 	public static void main(String[] args) {
-
-
 
 		System.out.println("Welcome to Address Book Program");
 
@@ -32,31 +30,27 @@ public class AddressBookMain {
 				System.out.println("Thank You");
 				return;
 			}
-
 		}
 	}
 
 	public static void addBook() {
 		System.out.println("Enter the Address Book Name");
 		String name = scanner.next();
-		AddressBook bookName = new AddressBook(name);
-		addressBook.add(bookName);
-		bookName.ContactUpdate(bookName);
+		map.put(name, new ArrayList<Contact>());
+		AddressBook.ContactUpdate(name, map.get(name));
 	}
 
 	public static void openBook() {
 		System.out.println("Enter the Existing Address Book Name");
 		String name = scanner.next();
-		for(AddressBook book: addressBook) {
-			if(book.bookName.equals(name)) {
-				book.ContactUpdate(book);
-			}
+		if(map.containsKey(name)) {
+			AddressBook.ContactUpdate(name, map.get(name));
 		}
 	}
 
 	public static void viewBook() {
-		for(AddressBook book: addressBook) {
-			System.out.println("[ Address Book Name = " + book.bookName + " ]");
+		for(Map.Entry<String,List<Contact>> entry: map.entrySet()) {
+			System.out.println("Addres Book Name = " + entry.getKey() + "\nNumber of Contacts = " + entry.getValue().size());
 		}
 	}
 }

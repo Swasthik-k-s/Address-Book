@@ -4,22 +4,15 @@ import java.util.*;
 
 public class AddressBook {
 
-	String bookName;
+	static String bookName;
 	static List<Contact> contacts;
 	static Scanner scanner = new  Scanner(System.in);
 
-	public AddressBook(String bookName) {
-		this.bookName = bookName;
-		contacts  = new ArrayList<>();
-	}
+	public static void ContactUpdate(String name, List<Contact> list) {
 
-	public String getBookName(String name) {
-		return bookName;
-	}
-
-	public void ContactUpdate(AddressBook addressBook) {
-
-		System.out.println("Address Book Name = " + addressBook.bookName);
+		contacts = list;
+		bookName = name;
+		System.out.println("Address Book Name = " + name);
 
 		while(true) {
 
@@ -68,6 +61,7 @@ public class AddressBook {
 
 		Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
 		contacts.add(contact);
+		AddressBookMain.map.replace(bookName, contacts);
 	}
 
 	public static void showAddressBook() {
@@ -83,7 +77,9 @@ public class AddressBook {
 		if(deleteContact == null) {
 			System.out.println("Name does not exist in the Address Book");
 		} else {
+
 			contacts.remove(deleteContact);
+			AddressBookMain.map.replace(bookName, contacts);
 			System.out.println("Contact Deleted Successfully");
 		}
 	}
