@@ -5,10 +5,10 @@ import java.util.*;
 public class AddressBook {
 
 	static String bookName;
-	static List<Contact> contacts;
+	static Set<Contact> contacts;
 	static Scanner scanner = new  Scanner(System.in);
 
-	public static void ContactUpdate(String name, List<Contact> list) {
+	public static void ContactUpdate(String name, Set<Contact> list) {
 
 		contacts = list;
 		bookName = name;
@@ -65,10 +65,7 @@ public class AddressBook {
 	}
 
 	public static void showAddressBook() {
-
-		for(int i=0;i<contacts.size();i++) {
-			System.out.println((i+1) + "\n" + contacts.get(i));
-		}
+		System.out.println(contacts);
 	}
 
 	public static void deleteContact() {

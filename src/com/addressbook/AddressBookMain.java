@@ -4,7 +4,7 @@ import java.util.*;
 
 public class AddressBookMain {
 
-	public static Map<String, List<Contact>> map = new HashMap<>();
+	public static Map<String, Set<Contact>> map = new HashMap<>();
 
 	static Scanner scanner = new  Scanner(System.in);
 
@@ -36,8 +36,12 @@ public class AddressBookMain {
 	public static void addBook() {
 		System.out.println("Enter the Address Book Name");
 		String name = scanner.next();
-		map.put(name, new ArrayList<Contact>());
-		AddressBook.ContactUpdate(name, map.get(name));
+		if(map.containsKey(name)) {
+			System.out.println("AddressBook Name already exists");
+		} else {
+			map.put(name, new HashSet<Contact>());
+			AddressBook.ContactUpdate(name, map.get(name));
+		}
 	}
 
 	public static void openBook() {
@@ -49,7 +53,7 @@ public class AddressBookMain {
 	}
 
 	public static void viewBook() {
-		for(Map.Entry<String,List<Contact>> entry: map.entrySet()) {
+		for(Map.Entry<String,Set<Contact>> entry: map.entrySet()) {
 			System.out.println("Addres Book Name = " + entry.getKey() + "\nNumber of Contacts = " + entry.getValue().size());
 		}
 	}
