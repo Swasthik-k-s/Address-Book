@@ -1,18 +1,24 @@
 package com.addressbook;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AddressBook {
 
 	static String bookName;
-	static Set<Contact> contacts;
+	public static List<Contact> contacts = new ArrayList<Contact>();
 	static Scanner scanner = new  Scanner(System.in);
+	
+	public AddressBook(String bookName) {
+		this.bookName = bookName;
+		
+	}
 
-	public static void ContactUpdate(String name, Set<Contact> list) {
+	public static void ContactUpdate(AddressBook book) {
 
-		contacts = list;
-		bookName = name;
-		System.out.println("Address Book Name = " + name);
+		contacts = book.contacts;
+		bookName = book.bookName;
+		System.out.println("Address Book Name = " + bookName);
 
 		while(true) {
 
@@ -60,12 +66,26 @@ public class AddressBook {
 
 
 		Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
-		contacts.add(contact);
-		AddressBookMain.map.replace(bookName, contacts);
+		
+		List<Contact> existingContact = contacts.stream().filter(con->{
+            if (con.equals(contact)) {
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toList());
+
+        if (existingContact.size() == 0) {
+            contacts.add(contact);
+        }
+        else {
+            System.out.println("This Contact Already exists in the Address Book");
+        }
 	}
 
 	public static void showAddressBook() {
-		System.out.println(contacts);
+		for(Contact contact: contacts) {
+			System.out.println(contact);
+		}
 	}
 
 	public static void deleteContact() {
@@ -76,7 +96,6 @@ public class AddressBook {
 		} else {
 
 			contacts.remove(deleteContact);
-			AddressBookMain.map.replace(bookName, contacts);
 			System.out.println("Contact Deleted Successfully");
 		}
 	}
