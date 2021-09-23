@@ -14,6 +14,10 @@ public class AddressBook {
 		
 	}
 
+	/**
+	 * Method to perform Contact operations
+	 * @param book - Points to the list of contacts present in the Address Book
+	 */
 	public static void ContactUpdate(AddressBook book) {
 
 		contacts = book.contacts;
@@ -45,6 +49,9 @@ public class AddressBook {
 		}
 	}
 
+	/**
+	 * Method to add Contact to the Address Book
+	 */
 	public static void addContact() {
 
 		System.out.println("Enter the First Name");
@@ -82,12 +89,18 @@ public class AddressBook {
         }
 	}
 
+	/**
+	 * Method to display the contacts present in the Address Book
+	 */
 	public static void showAddressBook() {
 		for(Contact contact: contacts) {
 			System.out.println(contact);
 		}
 	}
 
+	/**
+	 * Method to delete the contact from the Address Book
+	 */
 	public static void deleteContact() {
 		Contact deleteContact = getContact();
 
@@ -100,6 +113,9 @@ public class AddressBook {
 		}
 	}
 
+	/**
+	 * Method to edit the contact 
+	 */
 	public static void editContact() {
 
 		Scanner sc = new Scanner(System.in);
@@ -161,7 +177,11 @@ public class AddressBook {
 		}
 	}
 
-	public static Contact getContact() {
+	/**
+	 * Method to find contact based on first and last name
+	 * @return - returns a contact
+	 */
+	private static Contact getContact() {
 		System.out.println("Enter the First Name");
 		String fname = scanner.next();
 		System.out.println("Enter the Last Name");
