@@ -93,11 +93,13 @@ public class AddressBookMain {
 		case 1:
 			System.out.println("Enter City Name");
 			String cityName = scanner.next();
+			
 			for (AddressBook addressBook : bookMap.values()) {
 				List<Contact> sameCityContacts = addressBook.contacts.stream().filter((contact) -> {
 					return contact.city.equals(cityName);
 				}).collect(Collectors.toList());
 
+				System.out.println("Number of Contacts = " + sameCityContacts.size());
 				for (Contact contact : sameCityContacts) {
 					System.out.println(contact);
 				}
@@ -106,11 +108,13 @@ public class AddressBookMain {
 		case 2:
 			System.out.println("Enter State Name");
 			String stateName = scanner.next();
+			
 			for (AddressBook addressBook : bookMap.values()) {
 				List<Contact> sameStateContacts = addressBook.contacts.stream().filter((contact) -> {
 					return contact.state.equals(stateName);
 				}).collect(Collectors.toList());
 
+				System.out.println("Number of Contacts = " + sameStateContacts.size());
 				if(sameStateContacts.size() == 0) {
 					System.out.println("No Contacts found from State " + stateName);
 					break;
@@ -126,6 +130,9 @@ public class AddressBookMain {
 		}
 	}
 
+	/**
+	 * Method to view the contacts ordered by city or state
+	 */
 	private static void viewContacts() {
 		Map<String, List<Contact>> stateMap = new HashMap<String, List<Contact>>();
 		Map<String, List<Contact>> cityMap = new HashMap<String, List<Contact>>();
@@ -147,6 +154,7 @@ public class AddressBookMain {
 			}
 			for(Map.Entry<String, List<Contact>> item : cityMap.entrySet()) {
 				System.out.println("City : " + item.getKey());
+				System.out.println("Number of Contacts : " + item.getValue().size());
 				item.getValue().stream().forEach(contact -> {
 					System.out.println(contact);
 				});
@@ -165,6 +173,7 @@ public class AddressBookMain {
 			}
 			for(Map.Entry<String, List<Contact>> item : stateMap.entrySet()) {
 				System.out.println("State : " + item.getKey());
+				System.out.println("Number of Contacts : " + item.getValue().size());
 				item.getValue().stream().forEach(contact -> {
 					System.out.println(contact);
 				});
