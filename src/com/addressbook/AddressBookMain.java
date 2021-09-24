@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class AddressBookMain {
 
-	public static Map<String, AddressBook> map = new HashMap<>();
+	static Map<String, AddressBook> bookMap = new HashMap<>();
 
 	static Scanner scanner = new  Scanner(System.in);
 
@@ -14,7 +14,8 @@ public class AddressBookMain {
 		System.out.println("Welcome to Address Book Program");
 
 		while(true) {
-			System.out.println("1)Add New Address Book\n2)Open Existing Address Books\n3)View Existing Address Books\n4)Search Contact\n5)Exit");
+			System.out.println("1)Add New Address Book\n2)Open Existing Address Books\n3)View Existing Address Books\n4)Search Contact\n"
+					+ "5)View Contacts by State/City\n6)Exit");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 			switch(choice) {
@@ -30,6 +31,9 @@ public class AddressBookMain {
 			case 4:
 				searchContact();
 				break;
+			case 5:
+				viewContacts();
+				break;
 			default:
 				System.out.println("Thank You");
 				return;
@@ -43,11 +47,12 @@ public class AddressBookMain {
 	private static void addBook() {
 		System.out.println("Enter the Address Book Name");
 		String name = scanner.next();
-		if(map.containsKey(name)) {
+		if(bookMap.containsKey(name)) {
 			System.out.println("AddressBook Name already exists");
 		} else {
-			map.put(name, new AddressBook(name));
-			AddressBook.ContactUpdate(map.get(name));
+			AddressBook book = new AddressBook(name);
+			bookMap.put(name, book);
+			book.ContactUpdate(bookMap.get(name));
 		}
 	}
 
@@ -57,8 +62,9 @@ public class AddressBookMain {
 	private static void openBook() {
 		System.out.println("Enter the Existing Address Book Name");
 		String name = scanner.next();
-		if(map.containsKey(name)) {
-			AddressBook.ContactUpdate(map.get(name));
+		if(bookMap.containsKey(name)) {
+			AddressBook book2 = bookMap.get(name);
+			book2.ContactUpdate(bookMap.get(name));
 		} else {
 			System.out.println("Address Book Name not found");
 		}
@@ -68,10 +74,10 @@ public class AddressBookMain {
 	 * Method to view all the Address Books
 	 */
 	private static void viewBook() {
-		if(map.isEmpty()) {
+		if(bookMap.isEmpty()) {
 			System.out.println("No Address Books are added");
 		}
-		for(Map.Entry<String,AddressBook> entry: map.entrySet()) {
+		for(Map.Entry<String,AddressBook> entry: bookMap.entrySet()) {
 			System.out.println("Addres Book Name = " + entry.getKey() + "\nNumber of Contacts = " + entry.getValue().contacts.size());
 		}
 	}
@@ -87,7 +93,7 @@ public class AddressBookMain {
 		case 1:
 			System.out.println("Enter City Name");
 			String cityName = scanner.next();
-			for (AddressBook addressBook : map.values()) {
+			for (AddressBook addressBook : bookMap.values()) {
 				List<Contact> sameCityContacts = addressBook.contacts.stream().filter((contact) -> {
 					return contact.city.equals(cityName);
 				}).collect(Collectors.toList());
@@ -100,7 +106,7 @@ public class AddressBookMain {
 		case 2:
 			System.out.println("Enter State Name");
 			String stateName = scanner.next();
-			for (AddressBook addressBook : map.values()) {
+			for (AddressBook addressBook : bookMap.values()) {
 				List<Contact> sameStateContacts = addressBook.contacts.stream().filter((contact) -> {
 					return contact.state.equals(stateName);
 				}).collect(Collectors.toList());
@@ -109,10 +115,59 @@ public class AddressBookMain {
 					System.out.println("No Contacts found from State " + stateName);
 					break;
 				}
-				
+
 				for (Contact contact : sameStateContacts) {
 					System.out.println(contact);
 				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	private static void viewContacts() {
+		Map<String, List<Contact>> stateMap = new HashMap<String, List<Contact>>();
+		Map<String, List<Contact>> cityMap = new HashMap<String, List<Contact>>();
+
+		System.out.println("View Contacts by\n1) City\n2) State\n3) Back");
+		int choice = scanner.nextInt();
+
+		switch(choice) {
+		case 1:
+			for(AddressBook addressBook : bookMap.values()) {
+				addressBook.returnContacts().stream().forEach(contact -> {
+					List<Contact> contacts = cityMap.get(contact.city);
+					if(contacts == null) {
+						contacts = new ArrayList<>();
+					}
+					contacts.add(contact);
+					cityMap.put(contact.city, contacts);
+				});
+			}
+			for(Map.Entry<String, List<Contact>> item : cityMap.entrySet()) {
+				System.out.println("City : " + item.getKey());
+				item.getValue().stream().forEach(contact -> {
+					System.out.println(contact);
+				});
+			}
+			break;
+		case 2:
+			for(AddressBook addressBook : bookMap.values()) {
+				addressBook.returnContacts().stream().forEach(contact -> {
+					List<Contact> contacts = stateMap.get(contact.state);
+					if(contacts == null) {
+						contacts = new ArrayList<>();
+					}
+					contacts.add(contact);
+					stateMap.put(contact.state, contacts);
+				});
+			}
+			for(Map.Entry<String, List<Contact>> item : stateMap.entrySet()) {
+				System.out.println("State : " + item.getKey());
+				item.getValue().stream().forEach(contact -> {
+					System.out.println(contact);
+				});
 			}
 			break;
 		default:
