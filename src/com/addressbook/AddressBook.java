@@ -6,11 +6,15 @@ import java.util.stream.Collectors;
 public class AddressBook {
 
 	static String bookName;
-	public static List<Contact> contacts = new ArrayList<Contact>();
+	static List<Contact> contacts;
 	static Scanner scanner = new  Scanner(System.in);
 	
 	public AddressBook(String bookName) {
 		this.bookName = bookName;
+		contacts = new ArrayList<Contact>();
+	}
+	
+	public AddressBook() {
 		
 	}
 
@@ -18,10 +22,10 @@ public class AddressBook {
 	 * Method to perform Contact operations
 	 * @param book - Points to the list of contacts present in the Address Book
 	 */
-	public static void ContactUpdate(AddressBook book) {
+	public void ContactUpdate(AddressBook book) {
 
-		contacts = book.contacts;
-		bookName = book.bookName;
+		this.contacts = book.contacts;
+		this.bookName = book.bookName;
 		System.out.println("Address Book Name = " + bookName);
 
 		while(true) {
@@ -96,6 +100,14 @@ public class AddressBook {
 		for(Contact contact: contacts) {
 			System.out.println(contact);
 		}
+	}
+	
+	/**
+	 * Method to return the contacts from current address book
+	 * @return - list of contacts
+	 */
+	public static List<Contact> returnContacts() {
+		return contacts;
 	}
 
 	/**
