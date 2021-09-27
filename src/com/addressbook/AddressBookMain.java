@@ -20,7 +20,7 @@ public class AddressBookMain {
 
 		while(true) {
 			System.out.println("1)Add New Address Book\n2)Open Existing Address Books\n3)View Existing Address Books\n4)Search Contact\n"
-					+ "5)View Contacts by State/City\n6)Read from File\n7)Write to File\n8)Exit");
+					+ "5)View Contacts by State/City\n6)Read from File\n7)Write to File\n8)Read CSV\n9)Write CSV\n10)Exit");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 			switch(choice) {
@@ -44,6 +44,12 @@ public class AddressBookMain {
 				break;
 			case 7:
 				writeFile();
+				break;
+			case 8:
+				readCSV();
+				break;
+			case 9:
+				writeCSV();
 				break;
 			default:
 				System.out.println("Thank You");
@@ -198,7 +204,7 @@ public class AddressBookMain {
 	private static void writeFile() {
 		String basePath = "src/data";
 		Scanner m = new Scanner(System.in);
-		System.out.println("Enter the address book you wanna write");
+		System.out.println("Enter the address book you want to Write");
 		String fileName = m.next();
 		AddressBook Book = bookMap.get(fileName);
 		if (Book == null) {
@@ -207,7 +213,7 @@ public class AddressBookMain {
 
 		}
 		bookMap.get(fileName).writeContact(basePath + "/" + fileName);
-
+		Book.ContactUpdate(Book);
 	}
 
 	private static void readFile() {
@@ -226,12 +232,42 @@ public class AddressBookMain {
 			AddressBook adBook = new AddressBook(filename);
 			bookMap.put(filename, adBook);
 			adBook.readContact(br);
+			adBook.ContactUpdate(adBook);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
 
+	private static void writeCSV() {
+		String basePath = "src/CSV";
+		Scanner m = new Scanner(System.in);
+		System.out.println("Enter the address book you want to Write");
+		String fileName = m.next();
+		AddressBook Book = bookMap.get(fileName);
+		if (Book == null) {
+			System.out.println("No book found");
+			return;
+		}
+		bookMap.get(fileName).writeCSV(basePath + "/" + fileName + ".csv");
+		Book.ContactUpdate(Book);
+	}
+
+	private static void readCSV() {
+		String basePath = "src/CSV";
+		Scanner m = new Scanner(System.in);
+		System.out.println("Enter the address book you want to Read");
+		String filename = m.next();
+		File file = new File(basePath + "/" + filename + ".csv");
+		if (!file.exists()) {
+			System.out.println("Address book not found");
+			return;
+		}
+		AddressBook adBook = new AddressBook(filename);
+		bookMap.put(filename, adBook);
+		adBook.readCSV(basePath + "/" + filename + ".csv");
+		adBook.ContactUpdate(adBook);
 	}
 }

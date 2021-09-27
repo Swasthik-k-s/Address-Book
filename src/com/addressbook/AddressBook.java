@@ -2,9 +2,15 @@ package com.addressbook;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.CSVWriter;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -292,6 +298,64 @@ public class AddressBook {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @param file - File to read the CSV file
+	 */
+	public void readCSV(String file) {
+		try {
 
+			FileReader filereader = new FileReader(file);
+
+			CSVReader csvReader = new CSVReaderBuilder(filereader).withSkipLines(1).build();
+			List<String[]> allData = csvReader.readAll();
+			Contact contact;
+
+			// print Data
+			for (String[] row : allData) {
+				contact = new Contact(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]);
+				String name = row[0] + " " + row[1];
+				boolean exists = false;
+				for(Contact con: contacts) {
+					if(con.firstName + " " + con.lastName == name) {
+						exists = true;
+					}
+				}
+				if (exists == false) {
+					contacts.add(contact);
+				}
+			}
+			System.out.println();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Method to write the CSV file
+	 * @param filePath - Path on which to write the CSV file
+	 */
+	public void writeCSV(String filePath) {
+		File file = new File(filePath);
+		try {
+			FileWriter outputfile = new FileWriter(file);
+
+			CSVWriter writer = new CSVWriter(outputfile, ',', CSVWriter.NO_QUOTE_CHARACTER,
+					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
+			
+			String[] header = { "FistName", "Lastname", "Address", "City", "State", "Zip", "Phone Number", "Email" };
+			writer.writeNext(header);
+
+			for (Contact c : contacts) {
+				String[] data1 = { c.firstName, c.lastName, c.address, c.city, c.state, c.zip, c.phoneNumber, c.email };
+				writer.writeNext(data1);
+			}
+
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
