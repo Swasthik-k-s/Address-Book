@@ -1,21 +1,18 @@
 package com.addressbook;
 
 import java.util.*;
+
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AddressBook {
 
-	static String bookName;
-	static List<Contact> contacts;
+	String bookName;
+	List<Contact> contacts = new ArrayList<Contact>();
 	static Scanner scanner = new  Scanner(System.in);
-	
+
 	public AddressBook(String bookName) {
 		this.bookName = bookName;
-		contacts = new ArrayList<Contact>();
-	}
-	
-	public AddressBook() {
-		
 	}
 
 	/**
@@ -30,7 +27,7 @@ public class AddressBook {
 
 		while(true) {
 
-			System.out.println("1)Add a Contact\n2)Delete Contact\n3)Edit a Contact\n4)View Contacts\n5)Back");
+			System.out.println("1)Add a Contact\n2)Delete Contact\n3)Edit a Contact\n4)View Contacts\n5)Sort Contacts\n6)Exit");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 
@@ -47,6 +44,9 @@ public class AddressBook {
 			case 4:
 				showAddressBook();
 				break;
+			case 5:
+				sortContacts();
+				break;
 			default:
 				return;
 			}
@@ -56,7 +56,7 @@ public class AddressBook {
 	/**
 	 * Method to add Contact to the Address Book
 	 */
-	public static void addContact() {
+	public void addContact() {
 
 		System.out.println("Enter the First Name");
 		String firstName = scanner.next();
@@ -77,43 +77,43 @@ public class AddressBook {
 
 
 		Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
-		
-		List<Contact> existingContact = contacts.stream().filter(con->{
-            if (con.equals(contact)) {
-                return true;
-            }
-            return false;
-        }).collect(Collectors.toList());
 
-        if (existingContact.size() == 0) {
-            contacts.add(contact);
-        }
-        else {
-            System.out.println("This Contact Already exists in the Address Book");
-        }
+		List<Contact> existingContact = contacts.stream().filter(con->{
+			if (con.equals(contact)) {
+				return true;
+			}
+			return false;
+		}).collect(Collectors.toList());
+
+		if (existingContact.size() == 0) {
+			contacts.add(contact);
+		}
+		else {
+			System.out.println("This Contact Already exists in the Address Book");
+		}
 	}
 
 	/**
 	 * Method to display the contacts present in the Address Book
 	 */
-	public static void showAddressBook() {
+	public void showAddressBook() {
 		for(Contact contact: contacts) {
 			System.out.println(contact);
 		}
 	}
-	
+
 	/**
 	 * Method to return the contacts from current address book
 	 * @return - list of contacts
 	 */
-	public static List<Contact> returnContacts() {
+	public List<Contact> returnContacts() {
 		return contacts;
 	}
 
 	/**
 	 * Method to delete the contact from the Address Book
 	 */
-	public static void deleteContact() {
+	public void deleteContact() {
 		Contact deleteContact = getContact();
 
 		if(deleteContact == null) {
@@ -128,7 +128,7 @@ public class AddressBook {
 	/**
 	 * Method to edit the contact 
 	 */
-	public static void editContact() {
+	public void editContact() {
 
 		Scanner sc = new Scanner(System.in);
 		Contact editContact = getContact();
@@ -193,7 +193,7 @@ public class AddressBook {
 	 * Method to find contact based on first and last name
 	 * @return - returns a contact
 	 */
-	private static Contact getContact() {
+	private Contact getContact() {
 		System.out.println("Enter the First Name");
 		String fname = scanner.next();
 		System.out.println("Enter the Last Name");
@@ -205,5 +205,11 @@ public class AddressBook {
 			}
 		}
 		return null;
+	}
+
+	private void sortContacts() {
+		Stream<Contact> sortedStream = contacts.stream().sorted();
+		List<Contact> sortedList = sortedStream.collect(Collectors.toList());
+		System.out.println(sortedList);
 	}
 }
