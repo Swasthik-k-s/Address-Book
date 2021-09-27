@@ -27,7 +27,8 @@ public class AddressBook {
 
 		while(true) {
 
-			System.out.println("1)Add a Contact\n2)Delete Contact\n3)Edit a Contact\n4)View Contacts\n5)Sort Contacts\n6)Exit");
+			System.out.println("1)Add a Contact\n2)Delete Contact\n3)Edit a Contact\n4)View Contacts\n5)Sort by Name\n"
+					+ "6)Sort by Place\n7)Back");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 
@@ -46,6 +47,9 @@ public class AddressBook {
 				break;
 			case 5:
 				sortContacts();
+				break;
+			case 6:
+				sortByPlace();
 				break;
 			default:
 				return;
@@ -207,9 +211,35 @@ public class AddressBook {
 		return null;
 	}
 
+	/**
+	 * Method to sort the contacts based on Name
+	 */
 	private void sortContacts() {
-		Stream<Contact> sortedStream = contacts.stream().sorted();
-		List<Contact> sortedList = sortedStream.collect(Collectors.toList());
-		System.out.println(sortedList);
+		Collections.sort(contacts, Contact.compareByName);
+		showAddressBook();
+	}
+
+	/**
+	 * Method to sort the contacts based on Location
+	 */
+	private void sortByPlace() {
+		System.out.println("1)Sort by City\n2)Sort by State\n3)Sort by Zip Code\n4)Back");
+		int choice = scanner.nextInt();
+		switch(choice) {
+		case 1:
+			Collections.sort(contacts,Contact.compareByCity);
+			showAddressBook();
+			break;
+		case 2:
+			Collections.sort(contacts,Contact.compareByState);
+			showAddressBook();
+			break;
+		case 3:
+			Collections.sort(contacts,Contact.compareByZip);
+			showAddressBook();
+			break;
+		default:
+			break;
+		}
 	}
 }

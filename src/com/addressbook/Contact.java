@@ -1,8 +1,9 @@
 package com.addressbook;
 
+import java.util.Comparator;
 import java.util.Objects;
 
-public class Contact implements Comparable<Contact>{
+public class Contact{
 
 	public String firstName,lastName,address,city,state,zip,phoneNumber,email;
 
@@ -37,6 +38,29 @@ public class Contact implements Comparable<Contact>{
 		return firstName;
 	}
 
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getZip() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip = zip;
+	}
+	
+	public String getCity() {
+		return city;
+	}
 
 	@Override
 	public int hashCode() {
@@ -60,9 +84,44 @@ public class Contact implements Comparable<Contact>{
 		return "Contact [First Name=" + firstName + ", Last Name=" + lastName + ", Address=" + address + ", City=" + city
 				+ ", State=" + state + ", Zip=" + zip + ", Phone Number=" + phoneNumber + ", Email=" + email + "]";
 	}
-
-	@Override
-	public int compareTo(Contact o) {
-		return (this.firstName+this.lastName).compareTo(o.getFirstName()+o.getLastName());
-	}
+	
+	/**
+	 * Lambda function to sort by Name
+	 */
+	static Comparator<Contact> compareByName = new Comparator<Contact>() {
+		@Override
+		public int compare(Contact o1, Contact o2) {
+			return (o1.getFirstName()+o1.getLastName()).compareTo(o2.firstName+o2.getLastName());
+		}
+	};
+	
+	/**
+	 * Lambda function to sort by City
+	 */
+	static Comparator<Contact> compareByCity = new Comparator<Contact>() {
+		@Override
+		public int compare(Contact o1, Contact o2) {
+			return o1.getCity().compareTo(o2.getCity());
+		}
+	};
+	
+	/**
+	 * Lambda function to sort by State
+	 */
+	static Comparator<Contact> compareByState = new Comparator<Contact>() {
+		@Override
+		public int compare(Contact o1, Contact o2) {
+			return o1.getState().compareTo(o2.getState());
+		}
+	};
+	
+	/**
+	 * Lambda function to sort by ZipCode
+	 */
+	static Comparator<Contact> compareByZip = new Comparator<Contact>() {
+		@Override
+		public int compare(Contact o1, Contact o2) {
+			return o1.getZip().compareTo(o2.getZip());
+		}
+	};
 }
