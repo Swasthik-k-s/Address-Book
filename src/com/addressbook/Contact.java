@@ -2,7 +2,7 @@ package com.addressbook;
 
 import java.util.Objects;
 
-public class Contact {
+public class Contact implements Comparable<Contact>{
 
 	public String firstName,lastName,address,city,state,zip,phoneNumber,email;
 
@@ -28,6 +28,15 @@ public class Contact {
 		this.email = email;
 
 	}
+	
+	private String getLastName() {
+		return lastName;
+	}
+
+	private String getFirstName() {
+		return firstName;
+	}
+
 
 	@Override
 	public int hashCode() {
@@ -52,5 +61,8 @@ public class Contact {
 				+ ", State=" + state + ", Zip=" + zip + ", Phone Number=" + phoneNumber + ", Email=" + email + "]";
 	}
 
-
+	@Override
+	public int compareTo(Contact o) {
+		return (this.firstName+this.lastName).compareTo(o.getFirstName()+o.getLastName());
+	}
 }
