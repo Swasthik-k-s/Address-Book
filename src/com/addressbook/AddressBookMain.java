@@ -1,5 +1,10 @@
 package com.addressbook;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -15,7 +20,7 @@ public class AddressBookMain {
 
 		while(true) {
 			System.out.println("1)Add New Address Book\n2)Open Existing Address Books\n3)View Existing Address Books\n4)Search Contact\n"
-					+ "5)View Contacts by State/City\n6)Exit");
+					+ "5)View Contacts by State/City\n6)Read from File\n7)Write to File\n8)Exit");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 			switch(choice) {
@@ -33,6 +38,12 @@ public class AddressBookMain {
 				break;
 			case 5:
 				viewContacts();
+				break;
+			case 6:
+				readFile();
+				break;
+			case 7:
+				writeFile();
 				break;
 			default:
 				System.out.println("Thank You");
@@ -93,7 +104,7 @@ public class AddressBookMain {
 		case 1:
 			System.out.println("Enter City Name");
 			String cityName = scanner.next();
-			
+
 			for (AddressBook addressBook : bookMap.values()) {
 				List<Contact> sameCityContacts = addressBook.contacts.stream().filter((contact) -> {
 					return contact.city.equals(cityName);
@@ -108,7 +119,7 @@ public class AddressBookMain {
 		case 2:
 			System.out.println("Enter State Name");
 			String stateName = scanner.next();
-			
+
 			for (AddressBook addressBook : bookMap.values()) {
 				List<Contact> sameStateContacts = addressBook.contacts.stream().filter((contact) -> {
 					return contact.state.equals(stateName);
@@ -182,5 +193,45 @@ public class AddressBookMain {
 		default:
 			break;
 		}
+	}
+
+	private static void writeFile() {
+		String basePath = "src/data";
+		Scanner m = new Scanner(System.in);
+		System.out.println("Enter the address book you wanna write");
+		String fileName = m.next();
+		AddressBook Book = bookMap.get(fileName);
+		if (Book == null) {
+			System.out.println("No book found");
+			return;
+
+		}
+		bookMap.get(fileName).writeContact(basePath + "/" + fileName);
+
+	}
+
+	private static void readFile() {
+		String basePath = "src/data";
+		Scanner m = new Scanner(System.in);
+		System.out.println("Enter the address book you want to Read");
+		String filename = m.next();
+		File file = new File(basePath + "/" + filename);
+		if (!file.exists()) {
+			System.out.println("Address book not found");
+			return;
+		}
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+
+			AddressBook adBook = new AddressBook(filename);
+			bookMap.put(filename, adBook);
+			adBook.readContact(br);
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }

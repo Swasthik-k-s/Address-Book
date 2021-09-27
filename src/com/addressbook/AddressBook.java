@@ -1,5 +1,9 @@
 package com.addressbook;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import java.util.stream.Collectors;
@@ -241,5 +245,53 @@ public class AddressBook {
 		default:
 			break;
 		}
+	}
+	
+	/**
+	 * Method to read the file and check contacts
+	 * @param br - path to read the file from
+	 */
+	public void readContact(BufferedReader br) {
+		Contact contact;
+		String row;
+
+		try {
+			while ((row = br.readLine()) != null) {
+				String[] data = row.split(",");
+				contact = new Contact(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+				String name = data[0] + " " + data[1];
+				boolean exists = false;
+				for(Contact con: contacts) {
+					if(con.firstName + " " + con.lastName == name) {
+						exists = true;
+					}
+				}
+				if (exists == false) {
+					contacts.add(contact);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Method to write the contact into a file
+	 * @param fileName - file to write the data
+	 */
+	public void writeContact(String fileName) {
+		try {
+			BufferedWriter f_writer = new BufferedWriter(new FileWriter(fileName, false));
+			String str = "hello";
+			for (Contact c : contacts) {
+				f_writer.write(String.join(",", c.firstName, c.lastName, c.address, c.city, c.state, c.zip,
+						c.phoneNumber, c.email));
+				f_writer.write("\n");
+			}
+			f_writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
