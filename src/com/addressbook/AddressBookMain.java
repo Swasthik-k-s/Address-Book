@@ -20,7 +20,8 @@ public class AddressBookMain {
 
 		while(true) {
 			System.out.println("1)Add New Address Book\n2)Open Existing Address Books\n3)View Existing Address Books\n4)Search Contact\n"
-					+ "5)View Contacts by State/City\n6)Read from File\n7)Write to File\n8)Read CSV\n9)Write CSV\n10)Exit");
+					+ "5)View Contacts by State/City\n6)Read from File\n7)Write to File\n8)Read CSV\n9)Write CSV\n"
+					+ "10)Read from JSON\n11)Write to JSON\n12Exit");
 			System.out.println("Enter Your Choice");
 			int choice = scanner.nextInt();
 			switch(choice) {
@@ -50,6 +51,12 @@ public class AddressBookMain {
 				break;
 			case 9:
 				writeCSV();
+				break;
+			case 10:
+				readJSON();
+				break;
+			case 11:
+				writeJSON();
 				break;
 			default:
 				System.out.println("Thank You");
@@ -270,4 +277,37 @@ public class AddressBookMain {
 		adBook.readCSV(basePath + "/" + filename + ".csv");
 		adBook.ContactUpdate(adBook);
 	}
+
+	private static void writeJSON() {
+		String basePath = "src/JSON";
+		Scanner m = new Scanner(System.in);
+		System.out.println("Enter the address book you want to Write");
+		String fileName = m.next();
+		AddressBook Book = bookMap.get(fileName);
+		if (Book == null) {
+			System.out.println("No book found");
+			return;
+
+		}
+		bookMap.get(fileName).writeJSON(basePath + "/" + fileName + ".json");
+		Book.ContactUpdate(Book);
+
+	}
+
+	private static void readJSON() {
+		String basePath = "src/JSON";
+		Scanner m = new Scanner(System.in);
+		System.out.println("Enter the address book you want to Read");
+		String filename = m.next();
+		File file = new File(basePath + "/" + filename + ".json");
+		if (!file.exists()) {
+			System.out.println("Address book not found");
+			return;
+		}
+		AddressBook adBook = new AddressBook(filename);
+		bookMap.put(filename, adBook);
+		adBook.readJSON(basePath + "/" + filename + ".json");
+		adBook.ContactUpdate(adBook);
+	}
+
 }
