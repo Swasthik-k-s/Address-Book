@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
@@ -91,10 +92,12 @@ public class AddressBook {
 
 
 		Contact contact = new Contact(firstName,lastName,address,city,state,zip,phone,email);
-
+		
 		List<Contact> existingContact = contacts.stream().filter(con->{
-			if (con.equals(contact)) {
-				return true;
+			if(con != null) {
+				if (con.equals(contact)) {
+					return true;
+				}
 			}
 			return false;
 		}).collect(Collectors.toList());
@@ -252,7 +255,7 @@ public class AddressBook {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Method to read the file and check contacts
 	 * @param br - path to read the file from
@@ -280,7 +283,7 @@ public class AddressBook {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Method to write the contact into a file
 	 * @param fileName - file to write the data
@@ -299,7 +302,7 @@ public class AddressBook {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * @param file - File to read the CSV file
 	 */
@@ -332,7 +335,7 @@ public class AddressBook {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Method to write the CSV file
 	 * @param filePath - Path on which to write the CSV file
@@ -344,7 +347,7 @@ public class AddressBook {
 
 			CSVWriter writer = new CSVWriter(outputfile, ',', CSVWriter.NO_QUOTE_CHARACTER,
 					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
-			
+
 			String[] header = { "FistName", "Lastname", "Address", "City", "State", "Zip", "Phone Number", "Email" };
 			writer.writeNext(header);
 
@@ -357,5 +360,51 @@ public class AddressBook {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void writeJSON(String file) {
+		Gson gson = new Gson();
+		try {
+			FileWriter writer = new FileWriter(file);
+			for (Contact c : contacts) {
+				String json = gson.toJson(c);
+
+				writer.write(json);
+				writer.write("\n");
+
+			}
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void readJSON(String file) {
+		Gson gson = new Gson();
+		try {
+			System.out.println("Reading JSON from a file");
+
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			Contact contactObj = gson.fromJson(br, Contact.class);
+			boolean exists = false;
+			
+			if(contactObj != null) {
+				String name = contactObj.firstName + contactObj.lastName;
+				
+				if(contacts.size() != 0) {
+					for(Contact con: contacts) {
+						if(con.firstName + con.lastName == name) {
+							exists = true;
+						}
+					}
+				}
+			}
+			if (exists == false) {
+				contacts.add(contactObj);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 }
